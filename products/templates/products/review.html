@@ -7,7 +7,11 @@
 
 <section>
 
-{# Add new review form here #}
+<form action="{% url 'createreview' product.id %}" method="POST">
+  {% csrf_token %}
+  {{ form.as_table }}
+  <input type="submit" value="Add review">
+</form>
 
 </section>
 
