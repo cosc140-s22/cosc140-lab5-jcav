@@ -4,6 +4,7 @@ from .models import Product
 from .forms import ProductFilterForm, ReviewForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
+from django.contrib import messages
 
 def index(request):
     products = Product.objects.all().order_by('name')
@@ -22,7 +23,6 @@ def show(request, product_id):
   
 @login_required
 def create_review(request, product_id):
-  
   if request.method == 'POST':
     form = ReviewForm(request.POST)
     p = get_object_or_404(Product, pk=product_id)
@@ -30,6 +30,12 @@ def create_review(request, product_id):
       #create the model
       p.review_set.create(stars=form.cleaned_data['stars'], review= form.cleaned_data['review'], user = request.user)
       return redirect('show', p.id)
+    else:
+      messages.info(request, 'Please enter valid data to continue')
+      form = ReviewForm()
+      p = get_object_or_404(Product, pk=product_id) #the form isnt valid so render it again.
+      context = { 'product':p, 'form': form }
+      return render(request, 'products/review.html', context)
   else:
     form = ReviewForm()
     p = get_object_or_404(Product, pk=product_id)

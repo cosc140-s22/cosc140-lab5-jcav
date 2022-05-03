@@ -1,8 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <section>
-<p class="lead">New review for {{product.name}}</p>
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+{% endif %}
+  <p class="lead">New review for {{product.name}}</p>
 </section>
 
 <section>
